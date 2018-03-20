@@ -26,9 +26,5 @@
   },
   "devDependencies": {
     "nodemon": "^1.14.11"
-  },
-  "description": "Tutorial \"Local Library\" website written in in Node/Express.",
-  "main": "app.js",
-  "author": "",
-  "license": "ISC"
+  }
 }

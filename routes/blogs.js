@@ -11,7 +11,7 @@ var book_instance_controller = require('../controllers/bookinstanceController');
 
 /// BOOK ROUTES ///
 
-// GET catalog home page.
+// GET blogs home page.
 router.get('/', book_controller.index);  
 
 // GET request for creating a Book. NOTE This must come before routes that display Book (uses id).
