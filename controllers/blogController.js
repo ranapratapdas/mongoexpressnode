@@ -1,7 +1,7 @@
 var Book = require('../models/blog');
 var Author = require('../models/author');
 var Genre = require('../models/genre');
-var BookInstance = require('../models/bloginstance');
+var BlogInstance = require('../models/bloginstance');
 
 const { body,validationResult } = require('express-validator/check');
 const { sanitizeBody } = require('express-validator/filter');
@@ -15,16 +15,10 @@ exports.index = function(req, res) {
             Book.count(callback);
         },
         book_instance_count: function(callback) {
-            BookInstance.count(callback);
+            BlogInstance.count(callback);
         },
         book_instance_available_count: function(callback) {
-            BookInstance.count({status:'Available'},callback);
-        },
-        author_count: function(callback) {
-            Author.count(callback);
-        },
-        genre_count: function(callback) {
-            Genre.count(callback);
+            BlogInstance.count({status:'Available'},callback);
         },
     }, function(err, results) {
         res.render('index', { title: 'Blog Engine', error: err, data: results });
@@ -58,7 +52,7 @@ exports.book_detail = function(req, res, next) {
         },
         book_instance: function(callback) {
 
-          BookInstance.find({ 'book': req.params.id })
+          BlogInstance.find({ 'blog': req.params.id })
           .exec(callback);
         },
     }, function(err, results) {
@@ -77,17 +71,12 @@ exports.book_detail = function(req, res, next) {
 // Display book create form on GET.
 exports.book_create_get = function(req, res, next) {
 
+    console.log("I am here");
     // Get all authors and genres, which we can use for adding to our book.
     async.parallel({
-        authors: function(callback) {
-            Author.find(callback);
-        },
-        genres: function(callback) {
-            Genre.find(callback);
-        },
     }, function(err, results) {
         if (err) { return next(err); }
-        res.render('book_form', { title: 'New Blog',authors:results.authors, genres:results.genres });
+        res.render('blog_form', { title: 'New Blog',authors:results.authors, genres:results.genres });
     });
 
 };
@@ -107,9 +96,8 @@ exports.book_create_post = [
 
     // Validate fields.
     body('title', 'Title must not be empty.').isLength({ min: 1 }).trim(),
-    body('author', 'Author must not be empty.').isLength({ min: 1 }).trim(),
-    body('summary', 'Summary must not be empty.').isLength({ min: 1 }).trim(),
-    body('isbn', 'ISBN must not be empty').isLength({ min: 1 }).trim(),
+    body('summary', 'Short description must not be empty.').isLength({ min: 1 }).trim(),
+    body('content', 'Blog content must not be empty').isLength({ min: 1 }).trim(),
   
     // Sanitize fields.
     sanitizeBody('*').trim().escape(),
@@ -124,10 +112,8 @@ exports.book_create_post = [
         // Create a Book object with escaped and trimmed data.
         var book = new Book(
           { title: req.body.title,
-            author: req.body.author,
             summary: req.body.summary,
-            isbn: req.body.isbn,
-            genre: req.body.genre
+            content: req.body.content
            });
 
         if (!errors.isEmpty()) {
@@ -150,7 +136,7 @@ exports.book_create_post = [
                         results.genres[i].checked='true';
                     }
                 }
-                res.render('book_form', { title: 'New Blog',authors:results.authors, genres:results.genres, book: book, errors: errors.array() });
+                res.render('blog_form', { title: 'New Blog',authors:results.authors, genres:results.genres, book: book, errors: errors.array() });
             });
             return;
         }
@@ -175,12 +161,12 @@ exports.book_delete_get = function(req, res, next) {
             Book.findById(req.params.id).populate('author').populate('genre').exec(callback);
         },
         book_bookinstances: function(callback) {
-            BookInstance.find({ 'book': req.params.id }).exec(callback);
+            BlogInstance.find({ 'blog': req.params.id }).exec(callback);
         },
     }, function(err, results) {
         if (err) { return next(err); }
         if (results.book==null) { // No results.
-            res.redirect('/blogs/books');
+            res.redirect('/blogs/blogs');
         }
         // Successful, so render.
         res.render('book_delete', { title: 'Delete Book', book: results.book, book_instances: results.book_bookinstances } );
@@ -198,7 +184,7 @@ exports.book_delete_post = function(req, res, next) {
             Book.findById(req.params.id).populate('author').populate('genre').exec(callback);
         },
         book_bookinstances: function(callback) {
-            BookInstance.find({ 'book': req.params.id }).exec(callback);
+            BlogInstance.find({ 'blog': req.params.id }).exec(callback);
         },
     }, function(err, results) {
         if (err) { return next(err); }
@@ -209,11 +195,11 @@ exports.book_delete_post = function(req, res, next) {
             return;
         }
         else {
-            // Book has no BookInstance objects. Delete object and redirect to the list of books.
+            // Book has no BlogInstance objects. Delete object and redirect to the list of books.
             Book.findByIdAndRemove(req.body.id, function deleteBook(err) {
                 if (err) { return next(err); }
                 // Success - got to books list.
-                res.redirect('/blogs/books');
+                res.redirect('/blogs/blogs');
             });
 
         }
@@ -251,7 +237,7 @@ exports.book_update_get = function(req, res, next) {
                     }
                 }
             }
-            res.render('book_form', { title: 'Update Book', authors:results.authors, genres:results.genres, book: results.book });
+            res.render('blog_form', { title: 'Update Book', authors:results.authors, genres:results.genres, book: results.book });
         });
 
 };
@@ -320,7 +306,7 @@ exports.book_update_post = [
                         results.genres[i].checked='true';
                     }
                 }
-                res.render('book_form', { title: 'Update Book',authors:results.authors, genres:results.genres, book: book, errors: errors.array() });
+                res.render('blog_form', { title: 'Update Book',authors:results.authors, genres:results.genres, book: book, errors: errors.array() });
             });
             return;
         }
