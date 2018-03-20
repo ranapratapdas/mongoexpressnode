@@ -6,14 +6,14 @@ block content
   form(method='POST' action='')
     div.form-group
       label(for='title') Blog Title:
-      input#title.form-control(type='text', placeholder='Title of blog' name='title' required='true' value=(undefined===book ? '' : book.title) )
+      input#title.form-control(type='text', placeholder='Title of blog' name='title' required='true' value=(undefined===blog ? '' : blog.title) )
     div.form-group
       label(for='summary') Short Description:
-      input#summary.form-control(type='textarea', placeholder='short description' name='summary' value=(undefined===book ? '' : book.summary) required='true')
+      input#summary.form-control(type='textarea', placeholder='short description' name='summary' value=(undefined===blog ? '' : blog.summary) required='true')
     div.form-group
-      label(for='isbn') Blog Content:
+      label(for='content') Blog Content:
       div
-        textarea(cols="150", rows="10", placeholder='blog content' name='isbn' value=(undefined===book ? '' : book.isbn) required='true') 
+        textarea#content(cols="150", rows="10", placeholder='blog content' name='content' value=(undefined===blog ? '' : blog.content) required='true') 
   
     button.btn.btn-primary(type='submit') Publish it
 

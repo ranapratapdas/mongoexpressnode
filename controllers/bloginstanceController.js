@@ -1,5 +1,5 @@
-var BookInstance = require('../models/bookinstance')
-var Book = require('../models/book')
+var BookInstance = require('../models/bloginstance')
+var Book = require('../models/blog')
 var async = require('async')
 
 const { body,validationResult } = require('express-validator/check');

@@ -1,7 +1,7 @@
-var Book = require('../models/book');
+var Book = require('../models/blog');
 var Author = require('../models/author');
 var Genre = require('../models/genre');
-var BookInstance = require('../models/bookinstance');
+var BookInstance = require('../models/bloginstance');
 
 const { body,validationResult } = require('express-validator/check');
 const { sanitizeBody } = require('express-validator/filter');
@@ -27,7 +27,7 @@ exports.index = function(req, res) {
             Genre.count(callback);
         },
     }, function(err, results) {
-        res.render('index', { title: 'Local Library Home', error: err, data: results });
+        res.render('index', { title: 'Blog Engine', error: err, data: results });
     });
 };
 
@@ -150,7 +150,7 @@ exports.book_create_post = [
                         results.genres[i].checked='true';
                     }
                 }
-                res.render('book_form', { title: 'Create Book',authors:results.authors, genres:results.genres, book: book, errors: errors.array() });
+                res.render('book_form', { title: 'New Blog',authors:results.authors, genres:results.genres, book: book, errors: errors.array() });
             });
             return;
         }
