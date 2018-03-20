@@ -1,0 +1,16 @@
+extends layout
+
+block content
+  br
+  div.container-fluid.block
+    h4 #{title}: #{blog.title}
+    p #[strong Summary:] #{blog.summary}
+    p #[strong Content:] #{blog.content}
+    p #[strong Id:] 
+      a(href=blog.url) #{blog._id}
+
+    hr
+    p
+      a(href=blog.url+'/delete') Delete Blog
+    p
+      a(href=blog.url+'/update') Update Blog
