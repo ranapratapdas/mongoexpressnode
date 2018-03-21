@@ -27,8 +27,7 @@ exports.index = function(req, res) {
 // Display list of all blogs.
 exports.blog_list = function(req, res, next) {
 
-  Blog.find({}, 'title author ')
-    .populate('author')
+  Blog.find({}, 'title ')
     .exec(function (err, list_blogs) {
       if (err) { return next(err); }
       // Successful, so render
@@ -67,7 +66,6 @@ exports.blog_detail = function(req, res, next) {
 // Display blog create form on GET.
 exports.blog_create_get = function(req, res, next) {
 
-    // Get all authors and genres, which we can use for adding to our blog.
     async.parallel({
     }, function(err, results) {
         if (err) { return next(err); }
@@ -107,7 +105,6 @@ exports.blog_create_post = [
         if (!errors.isEmpty()) {
             // There are errors. Render form again with sanitized values/error messages.
 
-            // Get all authors and genres for form.
             async.parallel({
             }, function(err, results) {
                 if (err) { return next(err); }
@@ -213,13 +210,11 @@ exports.blog_update_post = [
    
     // Validate fields.
     body('title', 'Title must not be empty.').isLength({ min: 1 }).trim(),
-    body('author', 'Author must not be empty.').isLength({ min: 1 }).trim(),
     body('summary', 'Short description must not be empty.').isLength({ min: 1 }).trim(),
     body('content', 'Blog content must not be empty').isLength({ min: 1 }).trim(),
 
     // Sanitize fields.
     sanitizeBody('title').trim().escape(),
-    sanitizeBody('author').trim().escape(),
     sanitizeBody('summary').trim().escape(),
     sanitizeBody('content').trim().escape(),
     
@@ -233,16 +228,12 @@ exports.blog_update_post = [
         // Create a Blog object with escaped/trimmed data and old id.
         var blog = new Blog(
           { title: req.body.title,
-            author: req.body.author,
             summary: req.body.summary,
             content: req.body.content,
             _id:req.params.id // This is required, or a new ID will be assigned!
            });
 
         if (!errors.isEmpty()) {
-            // There are errors. Render form again with sanitized values/error messages.
-
-            // Get all authors and genres for form
             async.parallel({
             }, function(err, results) {
                 if (err) { return next(err); }

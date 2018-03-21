@@ -12,8 +12,14 @@ block content
       input#summary.form-control(type='textarea', placeholder='short description' name='summary' value=(undefined===blog ? '' : blog.summary) required='true')
     div.form-group
       label(for='content') Blog Content:
-      div
+      div.form-group
         textarea#content(cols="150", rows="10", placeholder='blog content' name='content' value=(undefined===blog ? '' : blog.content) required='true') 
+          | #{undefined===blog ? '' : blog.content}
+      //- input#content(type='textarea', cols="1500", rows="1000", placeholder='blog content' name='content' value=(undefined===blog ? '' : blog.content) required='true')
+        //-  (undefined===blog ? '' : blog.content)
+      //-  textarea#content(cols="150", rows="10", placeholder='blog content' name='content' value=(undefined===blog ? '' : blog.content) required='true') 
+      //- div
+       
   
     button.btn.btn-primary(type='submit') Publish it
 
