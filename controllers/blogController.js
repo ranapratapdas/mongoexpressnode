@@ -1,5 +1,4 @@
 var Blog = require('../models/blog');
-var BlogInstance = require('../models/bloginstance');
 
 const { body,validationResult } = require('express-validator/check');
 const { sanitizeBody } = require('express-validator/filter');
@@ -7,17 +6,7 @@ const { sanitizeBody } = require('express-validator/filter');
 var async = require('async');
 
 exports.index = function(req, res) {
-
     async.parallel({
-        blog_count: function(callback) {
-            Blog.count(callback);
-        },
-        blog_instance_count: function(callback) {
-            BlogInstance.count(callback);
-        },
-        blog_instance_available_count: function(callback) {
-            BlogInstance.count({status:'Available'},callback);
-        },
     }, function(err, results) {
         res.render('index', { title: 'Blog Engine', error: err, data: results });
     });
@@ -45,11 +34,6 @@ exports.blog_detail = function(req, res, next) {
             Blog.findById(req.params.id)
               .exec(callback);
         },
-        blog_instance: function(callback) {
-
-          BlogInstance.find({ 'blog': req.params.id })
-          .exec(callback);
-        },
     }, function(err, results) {
         if (err) { return next(err); }
         if (results.blog==null) { // No results.
@@ -58,7 +42,7 @@ exports.blog_detail = function(req, res, next) {
             return next(err);
         }
         // Successful, so render.
-        res.render('blog_detail', { title: 'Blog Title', blog:  results.blog, blog_instances: results.blog_instance } );
+        res.render('blog_detail', { title: 'Blog Title', blog:  results.blog } );
     });
 
 };
@@ -132,16 +116,13 @@ exports.blog_delete_get = function(req, res, next) {
         blog: function(callback) {
             Blog.findById(req.params.id).exec(callback);
         },
-        blog_bloginstances: function(callback) {
-            BlogInstance.find({ 'blog': req.params.id }).exec(callback);
-        },
     }, function(err, results) {
         if (err) { return next(err); }
         if (results.blog==null) { // No results.
             res.redirect('/blogs/blogs');
         }
         // Successful, so render.
-        res.render('blog_delete', { title: 'Delete Blog', blog: results.blog, blog_instances: results.blog_bloginstances } );
+        res.render('blog_delete', { title: 'Delete Blog', blog: results.blog } );
     });
 
 };
@@ -155,19 +136,14 @@ exports.blog_delete_post = function(req, res, next) {
         blog: function(callback) {
             Blog.findById(req.params.id).exec(callback);
         },
-        blog_bloginstances: function(callback) {
-            BlogInstance.find({ 'blog': req.params.id }).exec(callback);
-        },
     }, function(err, results) {
         if (err) { return next(err); }
         // Success
-        if (results.blog_bloginstances.length > 0) {
-            // Blog has blog_instances. Render in same way as for GET route.
-            res.render('blog_delete', { title: 'Delete Blog', blog: results.blog, blog_instances: results.blog_bloginstances } );
+        if (results.length > 0) {
+            res.render('blog_delete', { title: 'Delete Blog', blog: results.blog } );
             return;
         }
         else {
-            // Blog has no BlogInstance objects. Delete object and redirect to the list of blogs.
             Blog.findByIdAndRemove(req.body.id, function deleteBlog(err) {
                 if (err) { return next(err); }
                 // Success - got to blogs list.

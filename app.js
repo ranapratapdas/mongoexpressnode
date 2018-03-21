@@ -6,7 +6,6 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 
 var index = require('./routes/index');
-var users = require('./routes/users');
 var blogs = require('./routes/blogs'); // Import routes for "blogs" area of site
 var compression = require('compression');
 var helmet = require('helmet');
@@ -42,7 +41,6 @@ app.use(compression()); // Compress all routes
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', index);
-app.use('/users', users);
 app.use('/blogs', blogs); // Add blogs routes to middleware chain.
 
 // Catch 404 and forward to error handler

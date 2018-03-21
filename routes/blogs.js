@@ -4,8 +4,6 @@ var router = express.Router();
 
 // Require our controllers.
 var blog_controller = require('../controllers/blogController'); 
-var blog_instance_controller = require('../controllers/bloginstanceController');
-
 
 /// Blog ROUTES ///
 
@@ -37,32 +35,3 @@ router.get('/blog/:id', blog_controller.blog_detail);
 router.get('/blogs', blog_controller.blog_list);
 
 module.exports = router;
-
-// /// BOOKINSTANCE ROUTES ///
-
-// // GET request for creating a BlogInstance. NOTE This must come before route that displays BlogInstance (uses id).
-// router.get('/bloginstance/create', blog_instance_controller.bloginstance_create_get);
-
-// // POST request for creating BlogInstance.
-// router.post('/bloginstance/create', blog_instance_controller.bloginstance_create_post);
-
-// // GET request to delete BlogInstance.
-// router.get('/bloginstance/:id/delete', blog_instance_controller.bloginstance_delete_get);
-
-// // POST request to delete BlogInstance.
-// router.post('/bloginstance/:id/delete', blog_instance_controller.bloginstance_delete_post);
-
-// // GET request to update BlogInstance.
-// router.get('/bloginstance/:id/update', blog_instance_controller.bloginstance_update_get);
-
-// // POST request to update BlogInstance.
-// router.post('/bloginstance/:id/update', blog_instance_controller.bloginstance_update_post);
-
-// // GET request for one BlogInstance.
-// router.get('/bloginstance/:id', blog_instance_controller.bloginstance_detail);
-
-// // GET request for list of all BlogInstance.
-// router.get('/bloginstances', blog_instance_controller.bloginstance_list);
-
-
-

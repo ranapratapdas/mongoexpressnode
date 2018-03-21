@@ -15,11 +15,6 @@ block content
       div.form-group
         textarea#content(cols="150", rows="10", placeholder='blog content' name='content' value=(undefined===blog ? '' : blog.content) required='true') 
           | #{undefined===blog ? '' : blog.content}
-      //- input#content(type='textarea', cols="1500", rows="1000", placeholder='blog content' name='content' value=(undefined===blog ? '' : blog.content) required='true')
-        //-  (undefined===blog ? '' : blog.content)
-      //-  textarea#content(cols="150", rows="10", placeholder='blog content' name='content' value=(undefined===blog ? '' : blog.content) required='true') 
-      //- div
-       
   
     button.btn.btn-primary(type='submit') Publish it
 
